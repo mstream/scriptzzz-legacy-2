@@ -1,3 +1,12 @@
 { sources ? import ./sources.nix, pkgs ? import sources.nixpkgs { } }:
 
-pkgs.mkShell { nativeBuildInputs = with pkgs; [ elmPackages.elm niv ]; }
+let
+  elm = import ./elm.nix { };
+  node = import ./node.nix { };
+
+  commonNativeInputs = with pkgs; [ niv ];
+
+in pkgs.mkShell {
+  nativeBuildInputs = commonNativeInputs ++ elm.nativeBuildInputs
+    ++ node.nativeBuildInputs;
+}
