@@ -1,0 +1,24 @@
+{
+  "private": true,
+  "scripts": {
+    "start": "nps"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.0.0",
+    "@babel/core": "^7.0.0",
+    "@babel/node": "^7.0.0",
+    "@babel/preset-env": "^7.0.0",
+    "@babel/preset-flow": "^7.0.0",
+    "@hegel/cli": "0.0.45",
+    "@ky-is/tailwind-color-palette": "^1.0.0",
+    "@savvywombat/tailwindcss-grid-areas": "^1.0.0",
+    "autoprefixer": "^10.0.0",
+    "core-js": "^3.0.0",
+    "elm-live": "^4.0.0",
+    "nps": "^5.0.0",
+    "postcss": "^8.0.0",
+    "postcss-cli": "^8.0.0",
+    "postcss-elm-css-tailwind": "~0.6.0",
+    "tailwindcss": "~1.6.0"
+  }
+}

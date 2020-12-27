@@ -1,20 +1,33 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
   <meta charset="utf-8">
   <title></title>
-  <link rel="stylesheet" type="text/css" href="./bootstrap.min.css" />
-</head>
-<script src="elm.js"></script>
+  <link rel="stylesheet" href="main.css">
+  <script src="elm.js"></script>
 </head>
 
 <body>
   <script>
-    const flags = {};
-    const app = Elm.Main.init({
-      flags: flags
+    const getWindowSize = () => ({
+      height: window.innerHeight,
+      width: window.innerWidth
     });
+
+    const app = Elm.Main.init({
+      flags: {
+        pixelRatio: window.devicePixelRatio,
+        windowSize: getWindowSize()
+      }
+    });
+
+    const reportWindowSize = () => app.ports.incoming.send({
+      type: "WINDOW_RESIZED",
+      body: getWindowSize()
+    });
+
+    window.addEventListener('resize', reportWindowSize);
   </script>
 </body>
 

@@ -1,0 +1,19 @@
+---
+env:
+  node: true
+
+extends:
+  - 'plugin:functional/external-recommended'
+  - 'plugin:jsdoc/recommended'
+
+parserOptions:
+  ecmaVersion: 6
+
+plugins:
+  - 'functional'
+  - 'jsdoc'
+
+rules:
+  quotes:
+    - 'error'
+    - 'backtick'
