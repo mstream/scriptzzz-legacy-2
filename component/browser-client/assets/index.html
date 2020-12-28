@@ -10,24 +10,30 @@
 
 <body>
   <script>
-    const getWindowSize = () => ({
-      height: window.innerHeight,
-      width: window.innerWidth
-    });
+    const getPixelRatio = () => window.devicePixelRatio
+    const getWindowHeight = () => window.innerHeight
+    const getWindowWidth = () => window.innerWidth
+
 
     const app = Elm.Main.init({
       flags: {
-        pixelRatio: window.devicePixelRatio,
-        windowSize: getWindowSize()
+        authToken: null,
+        githubOauthClientId: "0fb88880559f1b82f5b9",
+        pixelRatio: getPixelRatio(),
+        windowHeight: getWindowHeight(),
+        windowWidth: getWindowWidth(),
       }
     });
 
-    const reportWindowSize = () => app.ports.incoming.send({
+    const reportWindowResize = () => app.ports.incoming.send({
       type: "WINDOW_RESIZED",
-      body: getWindowSize()
+      body: {
+        height: getWindowHeight(),
+        width: getWindowWidth(),
+      }
     });
 
-    window.addEventListener('resize', reportWindowSize);
+    window.addEventListener('resize', reportWindowResize);
   </script>
 </body>
 
