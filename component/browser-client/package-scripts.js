@@ -1,26 +1,21 @@
-const distDir = "dist";
-const srcDir = "src";
+const cmd = (...segments) => segments.join(" ");
+const path = (...segments) => segments.join("/");
 
-const elmDist = distDir + "/elm.js";
-const elmSrc = srcDir + "/Main.elm";
-const pageDist = distDir + "/index.html"
+const assetsDir = path("assets");
+const distDir = path("dist");
+const srcDir = path("src");
+const indexHtml = path(assetsDir, "index.html");
 
-const elmMakeOpts = "--debug --output=" + elmDist;
 
 module.exports = {
   scripts: {
-    assets: {
-      copy: ["mkdir -p", distDir, "&& cp assets/*", distDir].join(" ")
+    copy: {
+      assets: cmd("mkdir -p", distDir, "&& cp assets/*", distDir),
     },
-    check: {
-      types: "hegel"
-    },
-    debug: ["elm-live", elmSrc, "--dir", distDir, "--hot --open --pushstate", "--", elmMakeOpts].join(" "),
+    serve: cmd("parcel serve", indexHtml),
     generate: {
-      css: "postcss -o /dev/null ./assets/tailwind.css"
+      css: cmd("postcss -o /dev/null ./assets/tailwind.css"),
     },
-    make: {
-      debug: "elm make " + elmSrc + " " + elmMakeOpts
-    }
+    build: cmd("parcel build", indexHtml),
   }
 };
