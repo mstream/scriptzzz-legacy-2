@@ -5,6 +5,7 @@ import App.Svg as AppSvg
 import App.Url as AppUrl exposing (makeGithubAuthorize)
 import App.Viewer as AppViewer
 import App.Window as AppWin
+import Browser.Dom as BrowserDom
 import Html.Styled as Html exposing (Html)
 import Html.Styled.Attributes as HtmlAttr
 import Html.Styled.Events as HtmlEvt
@@ -31,7 +32,7 @@ viewGuest githubOauthClientId =
         ]
 
 
-view : { r | authToken : Maybe String, currWindowSize : AppWin.Size, githubOauthClientId : String } -> Model -> Html msg
+view : { r | authToken : Maybe String, windowViewport : Maybe BrowserDom.Viewport, githubOauthClientId : String } -> Model -> Html msg
 view { authToken, githubOauthClientId } _ =
     let
         page =

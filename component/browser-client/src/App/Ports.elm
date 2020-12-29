@@ -1,4 +1,4 @@
-port module App.Ports exposing (Msg(..), subscriptions)
+port module App.Ports exposing (Msg(..), log, subscriptions)
 
 import App.Window as AppWin
 import Dict exposing (Dict)
@@ -21,7 +21,7 @@ type DecodingErr
 
 type Msg
     = FailedToDecode DecodingErr
-    | WindowResized AppWin.Size
+    | WindowScrolled
 
 
 type alias PortMsg =
@@ -30,23 +30,15 @@ type alias PortMsg =
     }
 
 
-sizeDecoder : JsonDec.Decoder AppWin.Size
-sizeDecoder =
-    JsonDec.succeed AppWin.Size
-        |> JsonDecPipe.required "height" JsonDec.int
-        |> JsonDecPipe.required "width" JsonDec.int
-
-
-windowResizedMsgDecoder : JsonDec.Decoder Msg
-windowResizedMsgDecoder =
-    JsonDec.map WindowResized sizeDecoder
+windowScrolledMsgDecoder : JsonDec.Decoder Msg
+windowScrolledMsgDecoder =
+    JsonDec.succeed WindowScrolled
 
 
 portMsgBodyDecoders : Dict String (JsonDec.Decoder Msg)
 portMsgBodyDecoders =
     Dict.fromList
-        [ ( "WINDOW_RESIZED", windowResizedMsgDecoder )
-        ]
+        [ ( "WINDOW_SCROLLED", windowScrolledMsgDecoder ) ]
 
 
 portMsgDecoder : JsonDec.Decoder PortMsg
@@ -79,3 +71,17 @@ handlePortJsonVal jsonVal =
 subscriptions : Sub Msg
 subscriptions =
     incoming handlePortJsonVal
+
+
+sendPortMsg : String -> JsonEnc.Value -> Cmd msg
+sendPortMsg type_ body =
+    outgoing <|
+        JsonEnc.object
+            [ ( "body", body )
+            , ( "type", JsonEnc.string type_ )
+            ]
+
+
+log : String -> Cmd msg
+log text =
+    sendPortMsg "LOG" <| JsonEnc.string text
