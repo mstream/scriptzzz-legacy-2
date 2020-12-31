@@ -1,21 +1,43 @@
-const cmd = (...segments) => segments.join(" ");
-const path = (...segments) => segments.join("/");
+const {
+  concurrent,
+  mkdirp,
+  rimraf,
+  series,
+} = require("nps-utils");
+
+const joinWith = delimiter => (...segments) => segments.join(delimiter);
+
+const cmd = joinWith(" ");
+const path = joinWith(require("path").sep);
 
 const assetsDir = path("assets");
 const distDir = path("dist");
+const genDir = path("gen");
 const srcDir = path("src");
+
 const indexHtml = path(assetsDir, "index.html");
 
+const cleanDir = dir => series(rimraf(dir), mkdirp(dir));
 
 module.exports = {
   scripts: {
-    copy: {
-      assets: cmd("mkdir -p", distDir, "&& cp assets/*", distDir),
+    clean: {
+      default: concurrent.nps("clean.dist", "clean.gen"),
+      dist: cleanDir(distDir),
+      gen: cleanDir(genDir),
     },
-    serve: cmd("parcel serve", indexHtml),
+    serve: series(
+      concurrent.nps("clean.dist", "generate"),
+      cmd("parcel serve", indexHtml),
+    ),
     generate: {
-      css: cmd("postcss -o /dev/null ./assets/tailwind.css"),
+      default: series.nps("clean.gen", "generate.css"),
+      css: cmd("postcss -o /dev/null", path(assetsDir, "tailwind.css")),
     },
-    build: cmd("parcel build", indexHtml),
+    build: {
+      default: series(
+        concurrent.nps("clean.dist", "generate"),
+        cmd("parcel build", indexHtml)),
+    },
   }
 };

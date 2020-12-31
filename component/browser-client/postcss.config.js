@@ -1,11 +1,12 @@
 const postcssElmCssTailwind = require("postcss-elm-css-tailwind");
+const tailwindcss = require("tailwindcss");
 
 module.exports = {
   plugins: [
-    require("tailwindcss")("./tailwind.config.js"),
+    tailwindcss("./tailwind.config.js"),
     postcssElmCssTailwind({
       baseTailwindCSS: "./assets/tailwind.css",
-      rootOutputDir: "./gen", // the generated output directory 
+      rootOutputDir: "./gen",
       rootModule: "Tailwind",
     }),
   ],
