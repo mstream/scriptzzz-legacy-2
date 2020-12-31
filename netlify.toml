@@ -1,7 +1,8 @@
 [build]
 base = "component/browser-client"
-command = "run build"
-publish = "component/browser-client/dist"
+command = "npm start build"
+ignore = "npm start show.ciChanges"
+publish = "dist"
 
 [[redirects]]
 from = "/*"

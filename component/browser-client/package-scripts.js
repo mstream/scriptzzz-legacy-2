@@ -21,23 +21,30 @@ const cleanDir = dir => series(rimraf(dir), mkdirp(dir));
 
 module.exports = {
   scripts: {
+    build: {
+      default: series(
+        concurrent.nps("clean.dist", "generate"),
+        cmd("parcel build", indexHtml)),
+    },
     clean: {
       default: concurrent.nps("clean.dist", "clean.gen"),
       dist: cleanDir(distDir),
       gen: cleanDir(genDir),
     },
-    serve: series(
-      concurrent.nps("clean.dist", "generate"),
-      cmd("parcel serve", indexHtml),
-    ),
     generate: {
       default: series.nps("clean.gen", "generate.css"),
       css: cmd("postcss -o /dev/null", path(assetsDir, "tailwind.css")),
     },
-    build: {
-      default: series(
-        concurrent.nps("clean.dist", "generate"),
-        cmd("parcel build", indexHtml)),
+    serve: series(
+      concurrent.nps("clean.dist", "generate"),
+      cmd("parcel serve", indexHtml),
+    ),
+    show: {
+      ciChanges: cmd(
+        "git diff --quiet HEAD^ HEAD -- ../../netlify.toml .",
+        ":!nix",
+        ":!shell.nix"
+      ),
     },
   }
 };
