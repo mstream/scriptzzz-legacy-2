@@ -21,7 +21,9 @@ type Page
 
 
 type alias Model =
-    { authToken : Maybe String
+    { apiUrl : String
+    , authToken : Maybe String
+    , githubOauthAuthCode : Maybe String
     , githubOauthClientId : String
     , navKey : BrowserNav.Key
     , page : Page
@@ -33,7 +35,9 @@ type alias Model =
 
 init : AppFlags.Flags -> Url -> BrowserNav.Key -> Model
 init flags url navKey =
-    { authToken = Nothing
+    { apiUrl = flags.apiUrl
+    , authToken = Nothing
+    , githubOauthAuthCode = Nothing
     , githubOauthClientId = flags.githubOauthClientId
     , navKey = navKey
     , page = Redirection

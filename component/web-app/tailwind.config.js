@@ -24,6 +24,7 @@ const boxShadow = {
 
 module.exports = {
   plugins: [],
+  purge: false,
   theme: {
     boxShadow,
     colors,

@@ -2,6 +2,7 @@ module App.Flags exposing (Flags)
 
 
 type alias Flags =
-    { authToken : Maybe String
+    { apiUrl : String
+    , authToken : Maybe String
     , githubOauthClientId : String
     }

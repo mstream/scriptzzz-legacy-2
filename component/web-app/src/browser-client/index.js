@@ -52,8 +52,9 @@ const handlePortMsg = val => {
 
 const app = Elm.Main.init({
   flags: {
+    apiUrl: process.env.API_URL,
     authToken: null,
-    githubOauthClientId: "0fb88880559f1b82f5b9",
+    githubOauthClientId: process.env.GITHUB_OAUTH_CLIENT_ID,
   },
 });
 

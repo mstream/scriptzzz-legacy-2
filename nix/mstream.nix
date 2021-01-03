@@ -1,20 +1,19 @@
-{ sources ? import ./sources.nix, pkgs ? import sources.nixpkgs { } }:
+{ pkgs ? import ./pkgs.nix { } }:
 
 let
-  defaultShellOpts = {
-    nativeBuildInputs = [ ];
-    shellHooks = "";
+  reducer = acc: env: {
+    buildInputs = acc.buildInputs ++ env.buildInputs;
+    nativeBuildInputs = acc.nativeBuildInputs ++ env.nativeBuildInputs;
+    propagatedBuildInputs = acc.propagatedBuildInputs
+      ++ env.propagatedBuildInputs;
+    propagatedNativeBuildInputs = acc.propagatedNativeBuildInputs
+      ++ env.propagatedNativeBuildInputs;
+    shellHook = acc.shellHook + "\n" + env.shellHook;
   };
 
-  mergeShellOpts = builtins.foldl' (optsA: optsB:
-    let optsBWithDefaults = defaultShellOpts // optsB;
-    in {
-      nativeBuildInputs = optsA.nativeBuildInputs
-        ++ optsBWithDefaults.nativeBuildInputs;
-      shellHooks = optsA.shellHooks + "\n"
-        + optsBWithDefaults.shellHooks;
-    }) defaultShellOpts;
+  defaultShell = pkgs.mkShell { };
 
-  mkShell = opts: pkgs.mkShell (mergeShellOpts opts);
+  mergeEnvs = envs:
+    pkgs.mkShell (builtins.foldl' reducer defaultShell envs);
 
-in { inherit mkShell; }
+in { inherit mergeEnvs; }

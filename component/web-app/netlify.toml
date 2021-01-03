@@ -1,0 +1,22 @@
+[build]
+base = "component/web-app"
+command = "npm start build"
+functions = "dist/api"
+ignore = "npm start show.ciChanges"
+publish = "dist/browser-client"
+
+
+[dev]
+autolaunch = true
+command = "npm start dev.browserClient"
+
+
+[[redirects]]
+from = "/_api/*"
+to = "/.netlify/functions/:splat"
+force = true
+
+[[redirects]]
+from = "/*"
+to = "/index.html"
+status = 200
