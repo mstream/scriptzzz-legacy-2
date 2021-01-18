@@ -1,67 +1,16 @@
-import {
-  Elm
-} from "./Main.elm";
+import * as elm from "./elm";
+import pino from "pino";
 
-
-const isValidPortMsg = val => {
-  if (val === null || val === undefined) {
-    return false;
+try {
+  const logger = pino();
+  try {
+    elm.init({
+      logger,
+      window,
+    });
+  } catch (error) {
+    logger.error("Unhandled application error", error);
   }
-
-  if (typeof val !== "object" && !val instanceof Object) {
-    return false;
-  }
-
-  if (val.type === null || val.type === undefined) {
-    return false;
-  }
-
-  if (typeof val !== "string" && !val instanceof String) {
-    return false;
-  }
-
-  return true;
+} catch (error) {
+  console.error("Could not initialize the logger", error);
 }
-
-const handleLog = text => console.log("Elm: " + text)
-
-const portMsgHandlers = {
-  "LOG": handleLog,
-}
-
-const handlePortMsg = val => {
-  if (!isValidPortMsg(val)) {
-    console.error("Invalid port msg received: " + val);
-    return;
-  }
-
-  const {
-    type,
-    body,
-  } = val;
-
-  const handler = portMsgHandlers[type];
-
-  if (handler === null || handler === undefined) {
-    console.error("Unsupprted port message type: " + type);
-    return;
-  }
-
-  handler(body);
-}
-
-const app = Elm.Main.init({
-  flags: {
-    apiUrl: process.env.API_URL,
-    authToken: null,
-    githubOauthClientId: process.env.GITHUB_OAUTH_CLIENT_ID,
-  },
-});
-
-app.ports.outgoing.subscribe(handlePortMsg);
-
-const reportWindowScroll = () => app.ports.incoming.send({
-  type: "WINDOW_SCROLLED",
-});
-
-window.addEventListener("scroll", reportWindowScroll);

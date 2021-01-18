@@ -12,11 +12,13 @@ command = "npm start dev.browserClient"
 
 
 [[redirects]]
-from = "/_api/*"
-to = "/.netlify/functions/:splat"
 force = true
+from = "/_api/*"
+status = 200
+to = "/.netlify/functions/:splat"
 
 [[redirects]]
+force = false
 from = "/*"
-to = "/index.html"
 status = 200
+to = "/index.html"

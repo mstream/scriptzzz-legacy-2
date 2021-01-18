@@ -1,1 +1,0 @@
-{"version":3,"sources":["ping.js"],"names":["exports","handler","evt","ctx","body","statusCode"],"mappings":";AAAAA,QAAQC,QAAU,OAAOC,EAAKC,KAAS,CACrCC,KAAMF,EAAIE,KACVC,WAAY","file":"ping.js","sourceRoot":"","sourcesContent":["exports.handler = async (evt, ctx) => ({\n  body: evt.body,\n  statusCode: 200,\n});\n"]}
