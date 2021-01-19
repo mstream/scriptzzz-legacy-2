@@ -1,4 +1,8 @@
-module Scriptzzz.Browser.Client.Model exposing (App, Model)
+module Scriptzzz.Browser.Client.Model exposing
+    ( App
+    , InitializedModel
+    , Model(..)
+    )
 
 import Browser.Events as BrowserEvt
 import Scriptzzz.Core.Loadable as CoreLoadable
@@ -10,9 +14,14 @@ type alias App =
     String
 
 
-type alias Model =
+type alias InitializedModel =
     { app : CoreLoadable.ViaHttp App
     , documentVisibility : BrowserEvt.Visibility
     , now : Time.Posix
     , timeUpdateInterval : Nat
     }
+
+
+type Model
+    = FailedToInitialize
+    | Initialized InitializedModel

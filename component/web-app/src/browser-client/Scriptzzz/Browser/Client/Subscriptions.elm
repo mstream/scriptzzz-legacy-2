@@ -2,7 +2,7 @@ module Scriptzzz.Browser.Client.Subscriptions exposing (subscriptions)
 
 import Browser.Events as BrowserEvt
 import Scriptzzz.Browser.Client.Message as BrowserClientMsg exposing (Msg)
-import Scriptzzz.Browser.Client.Model exposing (Model)
+import Scriptzzz.Browser.Client.Model as BrowserClientModel exposing (Model)
 import Scriptzzz.Core.Nat as CoreNat exposing (Nat)
 import Time
 
@@ -26,9 +26,14 @@ windowResize =
 
 
 subscriptions : Model -> Sub Msg
-subscriptions { timeUpdateInterval } =
-    Sub.batch
-        [ documentVisibilityChange
-        , timeUpdate timeUpdateInterval
-        , windowResize
-        ]
+subscriptions model =
+    case model of
+        BrowserClientModel.Initialized { timeUpdateInterval } ->
+            Sub.batch
+                [ documentVisibilityChange
+                , timeUpdate timeUpdateInterval
+                , windowResize
+                ]
+
+        BrowserClientModel.FailedToInitialize ->
+            Sub.none

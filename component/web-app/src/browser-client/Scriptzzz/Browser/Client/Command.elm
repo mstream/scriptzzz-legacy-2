@@ -1,4 +1,9 @@
-module Scriptzzz.Browser.Client.Command exposing (loadApp, logInfo)
+module Scriptzzz.Browser.Client.Command exposing
+    ( loadApp
+    , logError
+    , logInfo
+    , logWarning
+    )
 
 import Process
 import Scriptzzz.Browser.Client.Data as BrowserClientData
@@ -14,8 +19,23 @@ loadApp =
         (Process.sleep 5000.0)
 
 
-logInfo : String -> Cmd msg
-logInfo =
-    BrowserClientData.Log BrowserClientData.Info
+log : BrowserClientData.LogLevel -> String -> Cmd msg
+log level =
+    BrowserClientData.Log level
         >> BrowserClientData.encodePortMessage
         >> BrowserClientPort.elmToJs
+
+
+logError : String -> Cmd msg
+logError =
+    log BrowserClientData.Error
+
+
+logInfo : String -> Cmd msg
+logInfo =
+    log BrowserClientData.Info
+
+
+logWarning : String -> Cmd msg
+logWarning =
+    log BrowserClientData.Warning

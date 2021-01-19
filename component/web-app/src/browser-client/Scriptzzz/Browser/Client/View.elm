@@ -14,8 +14,8 @@ viewApp model =
     El.text model
 
 
-viewBody : Model -> Element msg
-viewBody { app, now } =
+viewBodyInitialized : BrowserClientModel.InitializedModel -> Element msg
+viewBodyInitialized { app, now } =
     case CoreLoadable.getState CoreNat.max now app of
         CoreLoadable.Failed _ ->
             El.text "error"
@@ -30,11 +30,24 @@ viewBody { app, now } =
             viewApp appModel
 
 
+viewBody : Model -> Element msg
+viewBody model =
+    El.el [ El.centerX, El.centerY ] <|
+        case model of
+            BrowserClientModel.FailedToInitialize ->
+                El.text "Initialization failure"
+
+            BrowserClientModel.Initialized initializedModel ->
+                viewBodyInitialized initializedModel
+
+
 view : Model -> Browser.Document msg
 view model =
     { body =
         [ El.layout
-            [ ElBg.color (El.rgba 0 0 0 1), ElFont.color (El.rgba 1 1 1 1) ]
+            [ ElBg.color (El.rgba 0 0 0 1)
+            , ElFont.color (El.rgba 1 1 1 1)
+            ]
             (viewBody model)
         ]
     , title = "Scriptzzz"

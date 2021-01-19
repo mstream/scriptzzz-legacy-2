@@ -27,7 +27,7 @@ const handleLog = ({
 }, {
   level,
   text
-}) => logger.info(text);
+}) => logger[level](text);
 
 const portMessageHandlers = {
   "LOG": handleLog,
